@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bw7g2vidvnks3"]
+
+[ext_resource type="Script" path="res://FlappyBird/FlappyBird.gd" id="1_mcwui"]
+
+[node name="FlappyBird" type="Node2D"]
+script = ExtResource("1_mcwui")
