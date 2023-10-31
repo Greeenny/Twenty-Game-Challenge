@@ -1,6 +1,48 @@
-[gd_scene load_steps=2 format=3 uid="uid://bw7g2vidvnks3"]
+[gd_scene load_steps=9 format=3 uid="uid://bw7g2vidvnks3"]
 
 [ext_resource type="Script" path="res://FlappyBird/FlappyBird.gd" id="1_mcwui"]
+[ext_resource type="Script" path="res://FlappyBird/Player.gd" id="2_fcor1"]
+[ext_resource type="Script" path="res://FlappyBird/Obstacle.gd" id="3_8n4qr"]
+[ext_resource type="Script" path="res://FlappyBird/Camera2D.gd" id="3_orpch"]
+[ext_resource type="Texture2D" uid="uid://sql121vjw5w1" path="res://icon.svg" id="5_eccnh"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yms0a"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ccsc"]
+size = Vector2(29.5, 69.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yqj5x"]
 
 [node name="FlappyBird" type="Node2D"]
 script = ExtResource("1_mcwui")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = ExtResource("2_fcor1")
+color = Color(0.521569, 0.160784, 0.317647, 1)
+
+[node name="Collision" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CircleShape2D_yms0a")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+editor_draw_limits = true
+script = ExtResource("3_orpch")
+
+[node name="Obstacle" type="Area2D" parent="."]
+script = ExtResource("3_8n4qr")
+
+[node name="Top" type="CollisionShape2D" parent="Obstacle"]
+position = Vector2(0.25, 34.75)
+shape = SubResource("RectangleShape2D_6ccsc")
+
+[node name="TopSprite" type="Sprite2D" parent="Obstacle/Top"]
+texture = ExtResource("5_eccnh")
+
+[node name="Bottom" type="CollisionShape2D" parent="Obstacle"]
+position = Vector2(0, 21)
+shape = SubResource("RectangleShape2D_yqj5x")
+
+[node name="BottomSprite" type="Sprite2D" parent="Obstacle/Bottom"]
+texture = ExtResource("5_eccnh")
+
+[connection signal="mouse_entered" from="Obstacle" to="Obstacle" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Obstacle" to="Obstacle" method="_on_mouse_exited"]
