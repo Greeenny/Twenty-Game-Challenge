@@ -12,14 +12,13 @@ var color : Color = Color.MEDIUM_PURPLE
 func _ready():
 	pass # Replace with function body.
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	queue_redraw()
 	pass
 	
 func create_obstacle(x_position,top_of_screen_limit,bot_of_screen_limit,opening_height):
-	set_global_position(Vector2(100,top_of_screen_limit))
+	set_global_position(Vector2(x_position,top_of_screen_limit))
 	top_of_screen_y = 0
 	bot_of_screen_y = bot_of_screen_limit - top_of_screen_limit
 	position_obstacle(opening_height)
@@ -56,6 +55,7 @@ func position_obstacle(opening_height):
 
 func _on_mouse_entered():
 	print("mouse entered")
+	print(get_global_mouse_position())
 	pass # Replace with function body.
 
 

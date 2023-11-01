@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://daifjd3jc71mm"]
+
+[ext_resource type="Script" path="res://FlappyBird/Camera2D.gd" id="1_7kw1j"]
+
+[node name="Camera2D" type="Camera2D"]
+editor_draw_limits = true
+script = ExtResource("1_7kw1j")
+debug_mode = true
