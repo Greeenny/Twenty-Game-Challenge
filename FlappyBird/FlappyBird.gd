@@ -2,6 +2,9 @@ extends Node2D
 
 var camera_instance = load("res://Main/camera_2d.tscn")
 var camera : Camera2D
+
+@export var column_spacing : float = 250
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	camera = camera_instance.instantiate()
@@ -11,6 +14,7 @@ func _ready():
 	var top_limit = camera_center.y - camera_size.y/2
 	var bot_limit = camera_center.y + camera_size.y/2
 	$Player.set_position(camera_center*Vector2(0.33,1))
+	$Player.column_spacing = column_spacing
 	$Player.set_top_of_screen_y(top_limit)
 	var x_position = camera_center.x*2*3/4
 	var opening_height = 50
