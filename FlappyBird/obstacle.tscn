@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://n2e2ammj4f6y"]
+
+[ext_resource type="Script" path="res://FlappyBird/Obstacle.gd" id="1_0xmxy"]
+[ext_resource type="Texture2D" uid="uid://sql121vjw5w1" path="res://icon.svg" id="2_l8roi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ccsc"]
+size = Vector2(29.5, 69.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yqj5x"]
+
+[node name="Obstacle" type="Area2D"]
+script = ExtResource("1_0xmxy")
+
+[node name="Top" type="CollisionShape2D" parent="."]
+position = Vector2(0.25, 34.75)
+shape = SubResource("RectangleShape2D_6ccsc")
+
+[node name="TopSprite" type="Sprite2D" parent="Top"]
+texture = ExtResource("2_l8roi")
+
+[node name="Bottom" type="CollisionShape2D" parent="."]
+position = Vector2(0, 21)
+shape = SubResource("RectangleShape2D_yqj5x")
+
+[node name="BottomSprite" type="Sprite2D" parent="Bottom"]
+texture = ExtResource("2_l8roi")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

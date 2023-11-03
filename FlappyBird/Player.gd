@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal dashed
+signal jumped
 @export var color : Color
 var top_of_screen_y : float = -9999
 
@@ -22,6 +24,8 @@ var camera_offset : float
 @export_range(0,100,0.1) var camera_follow_speed : float = 10
 var camera_initial_position : Vector2
 var camera_initial_distance_to_player : float
+var is_camera_moving : bool = false
+
 enum STATE{FALLING,JUMPING,DASHING}
 var state = STATE.FALLING
 var accelleration = Vector2.ZERO
@@ -32,7 +36,7 @@ const spacebar_max_hold_time : float = 0.5
 var dash_time : float = 0
 const dash_time_max : float = .5
 var start_dash_x : float 
-var column_spacing : float 
+var obstacle_spacing : float 
 
 func _ready():
 	# We get the camera's offset by dividing the viewports x length by two,
@@ -63,6 +67,7 @@ func _physics_process(delta):
 		state = STATE.FALLING
 	
 	if Input.is_action_just_pressed("right") and state != STATE.DASHING:
+		emit_signal("player_dash")
 		state = STATE.DASHING
 		accelleration = Vector2.ZERO
 		
@@ -70,8 +75,8 @@ func _physics_process(delta):
 		start_dash_x = get_global_position().x
 	
 	if state == STATE.DASHING:
-		velocity.x = dash_speed - dash_speed*dash_decelleration_ratio*(get_global_position().x - start_dash_x)**2/(column_spacing)**2
-		if get_global_position().x >= start_dash_x + column_spacing:
+		velocity.x = dash_speed - dash_speed*dash_decelleration_ratio*(get_global_position().x - start_dash_x)**2/(obstacle_spacing)**2
+		if get_global_position().x >= start_dash_x + obstacle_spacing:
 			accelleration = Vector2.ZERO
 			velocity = Vector2.ZERO
 			state = STATE.FALLING
@@ -123,25 +128,31 @@ func _physics_process(delta):
 	# iff the camera is not where it should be.
 	if camera_difference_from_rest != 0:
 		# Get a ratio (which we turn positive) which I find easier to "balance".
-		var camera_ratio_from_rest = -(camera_difference_from_rest/column_spacing)
+		var camera_ratio_from_rest = -(camera_difference_from_rest/obstacle_spacing)
 		# If the ratio is such that the camera has "over-adjusted", we hard set the camera to sit
 		# at rest.
-		if camera_ratio_from_rest < 0:
+		if camera_ratio_from_rest > 0.1 and is_camera_moving == false:
+			is_camera_moving = true
+			
+		elif camera_ratio_from_rest < 0.4 and is_camera_moving:
+			camera_follow_ratio = 1
+			$Camera2D.move_local_x(camera_follow_ratio*camera_follow_speed) 
+		elif is_camera_moving:
+			camera_follow_ratio = 3
+			$Camera2D.move_local_x(camera_follow_ratio*camera_follow_speed) 
+		
+		camera_current_distance_to_player = get_global_position().x - $Camera2D.get_global_position().x
+		camera_difference_from_rest = camera_initial_distance_to_player - camera_current_distance_to_player	
+		camera_ratio_from_rest = -(camera_difference_from_rest/obstacle_spacing)
+		if camera_ratio_from_rest < 0 and is_camera_moving:
 			# Set ratio = 0
 			camera_follow_ratio = 0
 			# x = player_position + camera_initial distance from player
 			# y = current_camera y position
-			var current_rest_position = Vector2(get_global_position().x + camera_initial_position.x,$Camera2D.get_global_mouse_position().y)
+			var current_rest_position = Vector2(get_global_position().x + camera_initial_position.x,$Camera2D.get_global_position().y)
 			$Camera2D.set_global_position(current_rest_position)
 			camera_difference_from_rest = 0
-		elif camera_ratio_from_rest < 0.33:
-			camera_follow_ratio = 1
-			$Camera2D.move_local_x(camera_follow_ratio*camera_follow_speed) 
-		else:
-			camera_follow_ratio = 2
-			$Camera2D.move_local_x(camera_follow_ratio*camera_follow_speed) 
-	
-
+			is_camera_moving = false
 	#$Camera2D.move_local_x(camera_follow_velocity)
 		
 	

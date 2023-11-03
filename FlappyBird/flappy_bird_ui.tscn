@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://qyf7ysfdplmd"]
+
+[node name="FlappyBirdUI" type="CanvasLayer"]
+
+[node name="LabelContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Score" type="Label" parent="LabelContainer"]
+layout_mode = 2
+
+[node name="DashCount" type="Label" parent="LabelContainer"]
+layout_mode = 2
+
+[node name="JumpCount" type="Label" parent="LabelContainer"]
+layout_mode = 2
