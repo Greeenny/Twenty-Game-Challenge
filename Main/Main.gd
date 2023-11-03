@@ -36,8 +36,6 @@ func _on_games_menu_load_game(game_path):
 		UI.queue_free()
 	last_selected_game_path = game_path
 	current_game = load(game_path).instantiate()
-	if current_game.has_method("initialize_level"):
-		current_game.initialize_level()
 	add_child(current_game)
 	game_state = GAME_STATE.GAME_RUNNING
 	pass # Replace with function body.

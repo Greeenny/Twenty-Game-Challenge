@@ -18,9 +18,12 @@ func _process(delta):
 	pass
 	
 func create_obstacle(x_position,top_of_screen_limit,bot_of_screen_limit,opening_height):
-	set_global_position(Vector2(x_position,top_of_screen_limit))
+	var camera_center = get_viewport().get_camera_2d().get_screen_center_position()
+	var camera_size = get_viewport_rect().size
+	top_of_screen_y = camera_center.y - camera_size.y/2
+	set_global_position(Vector2(x_position,top_of_screen_y))
 	top_of_screen_y = 0
-	bot_of_screen_y = bot_of_screen_limit - top_of_screen_limit
+	bot_of_screen_y = camera_size.y
 	position_obstacle(opening_height)
 	initialized = true
 	

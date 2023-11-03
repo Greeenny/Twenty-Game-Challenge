@@ -5,6 +5,8 @@ var camera : Camera2D
 var camera_top_limit : float
 var camera_bot_limit : float
 var screen_width : float
+@onready var camera_width = $Player.camera_width
+
 
 @onready var jump_count_node = $FlappyBirdUI/LabelContainer/JumpCount
 @onready var dash_count_node = $FlappyBirdUI/LabelContainer/DashCount
@@ -14,8 +16,8 @@ var obstacle_instance = load("res://FlappyBird/obstacle.tscn")
 var obstacle_list : Array = []
 
 @export var obstacle_spacing : float = 250
-@export_range(200,0,0.1) var obstacle_height_max : float = 100
-@export_range (200,0,0.1) var obstacle_height_min : float = 50
+@export_range(1,200,0.1) var obstacle_height_max : float = 100
+@export_range (1,200,0.1) var obstacle_height_min : float = 50
 @export_range(0,100) var max_difficulty_score : int = 50
 
 var can_player_score : bool = false
@@ -23,6 +25,7 @@ var score : int = 0
 var obstacle_count : int = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	initialize_level()
 	pass # Replace with function body.
 
 
@@ -40,29 +43,28 @@ func initialize_level():
 		var temp = obstacle_height_max
 		obstacle_height_max = obstacle_height_min
 		obstacle_height_min = temp
-	var camera_center = $Player/Camera2D.get_screen_center_position()
-	var camera_size = get_viewport_rect().size
-	camera_top_limit = camera_center.y - camera_size.y/2
-	camera_bot_limit = camera_center.y + camera_size.y/2
-	$Player.set_position(camera_center*Vector2(0.33,1))
+	camera = $Player/Camera2D
+	camera.make_current()
+	var camera_center = camera.get_screen_center_position()
+
 	$Player.obstacle_spacing = obstacle_spacing
-	$Player.set_top_of_screen_y(camera_top_limit)
-	
 	var player_position_x = $Player.get_global_position().x
-	screen_width = get_viewport_rect().size.x
 	var obstacle_position_x = player_position_x + obstacle_spacing/2
-	while obstacle_position_x < player_position_x + screen_width*2:
+	
+	while obstacle_position_x < player_position_x + camera_width*2:
 		create_obstacle(obstacle_position_x)
 		obstacle_position_x += obstacle_spacing
 
 func create_obstacle(obstacle_position_x):
 	var obstacle = obstacle_instance.instantiate()
+	add_child(obstacle)
+	
 	var opening_height = obstacle_height_max - (obstacle_height_max-obstacle_height_min)*obstacle_count/max_difficulty_score
 	obstacle.create_obstacle(obstacle_position_x,camera_top_limit,camera_bot_limit,opening_height)
 	if obstacle_count < max_difficulty_score:
 		obstacle_count += 1
 	obstacle_position_x += obstacle_spacing
-	add_child(obstacle)
+
 	obstacle_list.append(obstacle)
 	print(obstacle.get_global_position())
 	pass

@@ -25,6 +25,7 @@ var camera_offset : float
 var camera_initial_position : Vector2
 var camera_initial_distance_to_player : float
 var is_camera_moving : bool = false
+var camera_width : float 
 
 enum STATE{FALLING,JUMPING,DASHING}
 var state = STATE.FALLING
@@ -42,15 +43,17 @@ func _ready():
 	# We get the camera's offset by dividing the viewports x length by two,
 	# Where when we multiply that by our offset ratio and add that to our x position
 	# The camera will be set behind or in front of the player.
+	$Camera2D.make_current()
 	camera_offset = get_viewport_rect().size.x/2*camera_offset_ratio
 	$Camera2D.move_local_x(camera_offset)
 	$Camera2D.set_as_top_level(true)
+	var camera_center = $Camera2D.get_screen_center_position()
+	var camera_size = get_viewport_rect().size
+	camera_width = camera_size.x
+	top_of_screen_y = camera_center.y - camera_size.y/2
 	camera_initial_position = $Camera2D.get_position()
 	camera_initial_distance_to_player = get_global_position().x - $Camera2D.get_global_position().x 
 
-
-func set_top_of_screen_y(input_y):
-		top_of_screen_y = input_y
 		
 func _physics_process(delta):
 
