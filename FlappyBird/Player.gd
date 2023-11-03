@@ -19,8 +19,9 @@ var top_of_screen_y : float = -9999
 @export_range(0,1,0.01) var camera_offset_ratio : float
 @export_range(0,1,0.01) var camera_follow_ratio : float
 var camera_offset : float
-var camera_follow_velocity : float = 0
-
+@export_range(0,100,0.1) var camera_follow_speed : float = 10
+var camera_initial_position : Vector2
+var camera_initial_distance_to_player : float
 enum STATE{FALLING,JUMPING,DASHING}
 var state = STATE.FALLING
 var accelleration = Vector2.ZERO
@@ -40,13 +41,15 @@ func _ready():
 	camera_offset = get_viewport_rect().size.x/2*camera_offset_ratio
 	$Camera2D.move_local_x(camera_offset)
 	$Camera2D.set_as_top_level(true)
+	camera_initial_position = $Camera2D.get_position()
+	camera_initial_distance_to_player = get_global_position().x - $Camera2D.get_global_position().x 
 
 
 func set_top_of_screen_y(input_y):
 		top_of_screen_y = input_y
 		
 func _physics_process(delta):
-	
+
 	# Note: 
 	#      All accelleration will be calculated, and then multiplied by delta. 
 	#      I don't really know why.
@@ -112,9 +115,34 @@ func _physics_process(delta):
 	queue_redraw()
 	
 	# Camera follow mechanic
-	var distance_to_camera = $Camera2D.get_global_position().x - self.get_global_position().x 
-	camera_follow_velocity = velocity.x
-	$Camera2D.move_local_x(distance_to_camera*delta)
+	# Calculate distance to player, then use that to find distance to rest.
+	var camera_current_distance_to_player = get_global_position().x - $Camera2D.get_global_position().x
+	var camera_difference_from_rest = camera_initial_distance_to_player - camera_current_distance_to_player
+
+	# Ensuring we don't divide by 0, and for efficiency, check if the camera should move
+	# iff the camera is not where it should be.
+	if camera_difference_from_rest != 0:
+		# Get a ratio (which we turn positive) which I find easier to "balance".
+		var camera_ratio_from_rest = -(camera_difference_from_rest/column_spacing)
+		# If the ratio is such that the camera has "over-adjusted", we hard set the camera to sit
+		# at rest.
+		if camera_ratio_from_rest < 0:
+			# Set ratio = 0
+			camera_follow_ratio = 0
+			# x = player_position + camera_initial distance from player
+			# y = current_camera y position
+			var current_rest_position = Vector2(get_global_position().x + camera_initial_position.x,$Camera2D.get_global_mouse_position().y)
+			$Camera2D.set_global_position(current_rest_position)
+			camera_difference_from_rest = 0
+		elif camera_ratio_from_rest < 0.33:
+			camera_follow_ratio = 1
+			$Camera2D.move_local_x(camera_follow_ratio*camera_follow_speed) 
+		else:
+			camera_follow_ratio = 2
+			$Camera2D.move_local_x(camera_follow_ratio*camera_follow_speed) 
+	
+
+	#$Camera2D.move_local_x(camera_follow_velocity)
 		
 	
 
