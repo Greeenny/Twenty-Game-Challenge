@@ -34,6 +34,10 @@ var accelleration = Vector2.ZERO
 var spacebar_hold_time : float = 0
 const spacebar_max_hold_time : float = 0.5
 
+var is_dash_queued := false
+var dash_queue_timer : float = 0
+var dash_queue_max : float = 0.2
+
 var dash_time : float = 0
 const dash_time_max : float = .5
 var start_dash_x : float 
@@ -69,15 +73,23 @@ func _physics_process(delta):
 		spacebar_hold_time = 0
 		state = STATE.FALLING
 	
-	if Input.is_action_just_pressed("right") and state != STATE.DASHING:
-		emit_signal("player_dash")
+	if (Input.is_action_just_pressed("right") or is_dash_queued) and state != STATE.DASHING:
+		is_dash_queued = false
+		dash_queue_timer = dash_queue_max
 		state = STATE.DASHING
-		accelleration = Vector2.ZERO
+		jump_count += 1
 		
+		accelleration = Vector2.ZERO
 		velocity = Vector2(dash_speed,0)
 		start_dash_x = get_global_position().x
+		
+		emit_signal("dashed")
+		
 	
 	if state == STATE.DASHING:
+		dash_queue_timer -= delta
+		if Input.is_action_just_pressed("right") and dash_queue_timer < 0:
+			is_dash_queued = true
 		velocity.x = dash_speed - dash_speed*dash_decelleration_ratio*(get_global_position().x - start_dash_x)**2/(obstacle_spacing)**2
 		if get_global_position().x >= start_dash_x + obstacle_spacing:
 			accelleration = Vector2.ZERO
@@ -93,11 +105,13 @@ func _physics_process(delta):
 			accelleration.y = jump_accelleration
 			velocity = velocity/3+ accelleration*delta
 			state = STATE.JUMPING
+			emit_signal("jumped")
 	
 	# When jumping, if spacebar is pressed, accellerate more and keep track of time held.
 	# Is spacebar not pressed, remove from spacebar timer.
 	# If spacebar timer has ran out, or if held to max time, set state to falling.
 	if state == STATE.JUMPING:
+		
 		if Input.is_action_pressed("space_bar"):
 			spacebar_hold_time += delta
 			accelleration.y += jump_accelleration

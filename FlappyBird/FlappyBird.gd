@@ -4,12 +4,10 @@ var camera_instance = load("res://Main/camera_2d.tscn")
 var camera : Camera2D
 var camera_top_limit : float
 var camera_bot_limit : float
-var screen_width : float
 @onready var camera_width = $Player.camera_width
 
 
 @onready var jump_count_node = $FlappyBirdUI/LabelContainer/JumpCount
-@onready var dash_count_node = $FlappyBirdUI/LabelContainer/DashCount
 @onready var score_node = $FlappyBirdUI/LabelContainer/Score
 
 var obstacle_instance = load("res://FlappyBird/obstacle.tscn")
@@ -31,7 +29,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if can_player_score == true and $Player.state != $Player.STATES.DASHING:
+	if can_player_score == true and $Player.state != $Player.STATE.DASHING:
 		can_player_score = false
 		add_score(1)
 		add_jump(1)
@@ -46,6 +44,7 @@ func initialize_level():
 	camera = $Player/Camera2D
 	camera.make_current()
 	var camera_center = camera.get_screen_center_position()
+
 
 	$Player.obstacle_spacing = obstacle_spacing
 	var player_position_x = $Player.get_global_position().x
@@ -66,32 +65,25 @@ func create_obstacle(obstacle_position_x):
 	obstacle_position_x += obstacle_spacing
 
 	obstacle_list.append(obstacle)
-	print(obstacle.get_global_position())
 	pass
-
-func add_dash(input_int):
-	var current_count = int(dash_count_node.get_text())
-	current_count += input_int
-	dash_count_node.set_text(current_count)
 
 func _on_player_dashed():
 	can_player_score = true
-	add_dash(-1)
 	var last_obstacle_x = obstacle_list[-1].get_global_position().x
 	create_obstacle(last_obstacle_x+obstacle_spacing)
 	var first_obstacle = obstacle_list[0]
 	var first_obstacle_x = first_obstacle.get_global_position().x
 	var distance_from_player = first_obstacle_x - $Player.get_global_position().x
-	if distance_from_player > 2*screen_width:
+	if distance_from_player < -2*camera_width:
 		first_obstacle.queue_free()
-		
-	pass # Replace with function body.
+		obstacle_list.pop_front()
+
 	pass # Replace with function body.
 
 func add_jump(input_int):
 	var current_count = int(jump_count_node.get_text())
 	current_count += input_int
-	jump_count_node.set_text(current_count)
+	jump_count_node.set_text(str(current_count))
 	
 func _on_player_jumped():
 	add_jump(-1)
@@ -100,4 +92,4 @@ func _on_player_jumped():
 func add_score(input_int):
 	var current_count = int(score_node.get_text())
 	current_count += input_int
-	score_node.set_text(current_count)
+	score_node.set_text(str(current_count))

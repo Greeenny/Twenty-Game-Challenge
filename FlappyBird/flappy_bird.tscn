@@ -12,7 +12,6 @@ script = ExtResource("1_mcwui")
 [node name="Player" type="CharacterBody2D" parent="."]
 script = ExtResource("2_fcor1")
 color = Color(0.521569, 0.160784, 0.317647, 1)
-jump_count = 10
 camera_offset_ratio = 0.33
 camera_follow_ratio = 0.5
 
@@ -29,9 +28,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Score" type="Label" parent="FlappyBirdUI/LabelContainer"]
-layout_mode = 2
-
-[node name="DashCount" type="Label" parent="FlappyBirdUI/LabelContainer"]
 layout_mode = 2
 
 [node name="JumpCount" type="Label" parent="FlappyBirdUI/LabelContainer"]
