@@ -133,7 +133,7 @@ func _physics_process(delta):
 			velocity.y = max_velocity
 		elif velocity.y < 0:
 			velocity.y = -max_velocity
-	move_and_slide()
+	#move_and_slide()
 	queue_redraw()
 	
 	# Camera follow mechanic

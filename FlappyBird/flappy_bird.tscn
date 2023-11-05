@@ -19,7 +19,6 @@ camera_follow_ratio = 0.5
 shape = SubResource("CircleShape2D_yms0a")
 
 [node name="Camera2D" parent="Player" instance=ExtResource("3_n8d7w")]
-debug_mode = false
 
 [node name="FlappyBirdUI" type="CanvasLayer" parent="."]
 
