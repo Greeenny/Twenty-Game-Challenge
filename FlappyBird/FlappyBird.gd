@@ -14,6 +14,7 @@ var obstacle_instance = load("res://FlappyBird/obstacle.tscn")
 var obstacle_list : Array = []
 
 @export var obstacle_spacing : float = 250
+@export var obstacle_width : float = 50
 @export_range(1,200,0.1) var obstacle_height_max : float = 100
 @export_range (1,200,0.1) var obstacle_height_min : float = 50
 @export_range(0,100) var max_difficulty_score : int = 50
@@ -48,7 +49,7 @@ func initialize_level():
 
 	$Player.obstacle_spacing = obstacle_spacing
 	var player_position_x = $Player.get_global_position().x
-	var obstacle_position_x = player_position_x + obstacle_spacing/2
+	var obstacle_position_x = player_position_x + obstacle_spacing*3/4
 	
 	while obstacle_position_x < player_position_x + camera_width*2:
 		create_obstacle(obstacle_position_x)
@@ -57,9 +58,12 @@ func initialize_level():
 func create_obstacle(obstacle_position_x):
 	var obstacle = obstacle_instance.instantiate()
 	add_child(obstacle)
-	
-	var opening_height = obstacle_height_max - (obstacle_height_max-obstacle_height_min)*obstacle_count/max_difficulty_score
-	obstacle.create_obstacle(obstacle_position_x,camera_top_limit,camera_bot_limit,opening_height)
+	var opening_height : float
+	if obstacle_count < max_difficulty_score:
+		opening_height = obstacle_height_max - (obstacle_height_max-obstacle_height_min)*obstacle_count/max_difficulty_score
+	else:
+		opening_height = obstacle_height_min
+	obstacle.initialize_obstacle(obstacle_position_x,obstacle_width,opening_height)
 	if obstacle_count < max_difficulty_score:
 		obstacle_count += 1
 	obstacle_position_x += obstacle_spacing
@@ -93,3 +97,9 @@ func add_score(input_int):
 	var current_count = int(score_node.get_text())
 	current_count += input_int
 	score_node.set_text(str(current_count))
+
+
+func _on_player_dead():
+	print("Player has died!")
+	Input.action_press("tilde_key")
+	pass # Replace with function body.
