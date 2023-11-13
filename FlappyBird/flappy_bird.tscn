@@ -85,6 +85,8 @@ text = "High Score "
 
 [node name="BackgroundSprites" type="Node2D" parent="."]
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
 [connection signal="dashed" from="Player" to="." method="_on_player_dashed"]
 [connection signal="dead" from="Player" to="." method="_on_player_dead"]
 [connection signal="dead" from="Player" to="Player" method="_on_dead"]

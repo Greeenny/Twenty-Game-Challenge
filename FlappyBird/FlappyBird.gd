@@ -22,6 +22,16 @@ var background_list : Array = []
 var can_player_score : bool = false
 var score : int = 0
 var obstacle_count : int = 0
+
+@export var BPM = 120
+var BPS = float(float(60)/float(BPM))
+var beat_counter = 0 
+var beat = 0
+var glock_1_wav = load("res://FlappyBird/706835__groupofseven__glok1.wav")
+var glock_2_wav = load("res://FlappyBird/706836__groupofseven__glok2.wav")
+var glock_3_wav = load("res://FlappyBird/706834__groupofseven__glok-3.wav")
+
+@onready var audio_stream_player_list = [$AudioStreamPlayer]
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	initialize_level()
@@ -33,6 +43,41 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+
+	beat_counter += delta
+	if beat_counter >= BPS:
+		var audio_stream_player = 0
+		for stream_player in audio_stream_player_list:
+			if stream_player.playing == false:
+				audio_stream_player = stream_player
+		if typeof(audio_stream_player) == typeof(0):
+			audio_stream_player = AudioStreamPlayer.new()
+			audio_stream_player_list.append(audio_stream_player)
+
+		
+		#print(beat_counter)
+		beat_counter = 0
+		if beat == 3:
+			audio_stream_player.stream = glock_1_wav
+			audio_stream_player.play()
+			beat = 0
+			for obstacle in obstacle_list:
+				if randi_range(0,1) == 0:
+					obstacle.chomp_obstacle()
+				else:
+					var translate_amount = randf_range(200,500)
+					if obstacle.edge == obstacle.EDGE.TOP:
+						translate_amount = -abs(translate_amount)
+					elif obstacle.edge == obstacle.EDGE.BOTTOM:
+						translate_amount = abs(translate_amount)
+					obstacle.translate_obstacle(translate_amount)
+		else:
+			beat += 1
+			audio_stream_player.stream = glock_3_wav
+			audio_stream_player.play()
+			
+		#print("beat")
+		
 	if can_player_score == true and $Player.state != $Player.STATE.DASHING:
 		can_player_score = false
 		add_score(1)
@@ -71,6 +116,7 @@ func initialize_level():
 	while obstacle_position_x < player_position_x + camera_width*2:
 		create_obstacle(obstacle_position_x)
 		obstacle_position_x += obstacle_spacing
+		
 
 func set_score(input_int):
 	var path_to_score_sprite = "res://FlappyBird/Sprites/"
@@ -95,6 +141,7 @@ func create_obstacle(obstacle_position_x):
 	obstacle_position_x += obstacle_spacing
 
 	obstacle_list.append(obstacle)
+
 	pass
 
 func _on_player_dashed(): 
@@ -166,5 +213,6 @@ func _on_player_dead():
 	
 	for obstacle in obstacle_list:
 		obstacle.queue_free()
+	obstacle_list.clear()
 	$FlappyBirdUI/GameOverScreen.show()
 	pass # Replace with function body.
