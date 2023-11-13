@@ -127,7 +127,7 @@ func _physics_process(delta):
 			velocity.y = max_velocity
 		elif velocity.y < 0:
 			velocity.y = -max_velocity
-	print(velocity)
+
 	move_and_slide()
 #	queue_redraw()
 
@@ -168,8 +168,7 @@ func _physics_process(delta):
 
 
 	# death checks lol
-	if get_last_slide_collision() != null and get_last_slide_collision().get_travel().x > 0:
-
+	if get_last_slide_collision() != null and velocity.x < dash_speed-5 and get_last_slide_collision().get_travel().x > 0:
 		emit_signal("dead")
 	
 	if get_global_position().y > get_viewport_rect().size.y:
@@ -185,8 +184,8 @@ func debug_movement():
 	
 
 
-func _draw():
-	draw_circle(Vector2.ZERO,10.0,color)
+#func _draw():
+#	draw_circle(Vector2.ZERO,10.0,color)
 	
 
 #Old jump mechanics
@@ -219,3 +218,8 @@ func _draw():
 #			spacebar_hold_time = 0
 #			state = STATE.FALLING
 #
+
+
+func _on_dead():
+	set_physics_process(false)
+	pass # Replace with function body.

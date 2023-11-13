@@ -1,17 +1,26 @@
-[gd_scene load_steps=5 format=3 uid="uid://bw7g2vidvnks3"]
+[gd_scene load_steps=9 format=3 uid="uid://bw7g2vidvnks3"]
 
 [ext_resource type="Script" path="res://FlappyBird/FlappyBird.gd" id="1_mcwui"]
 [ext_resource type="Script" path="res://FlappyBird/Player.gd" id="2_fcor1"]
 [ext_resource type="PackedScene" uid="uid://daifjd3jc71mm" path="res://Main/camera_2d.tscn" id="3_n8d7w"]
+[ext_resource type="Texture2D" uid="uid://bataohkfitlmh" path="res://FlappyBird/Sprites/bluebird-midflap.png" id="4_ernwv"]
+[ext_resource type="FontFile" uid="uid://q15cvdges5eg" path="res://FlappyBird/FlappyFont.ttf" id="5_1fltc"]
+[ext_resource type="Texture2D" uid="uid://cp81kq0npjfj5" path="res://FlappyBird/Sprites/gameover.png" id="5_r1aiw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yms0a"]
 resource_local_to_scene = true
 
+[sub_resource type="Theme" id="Theme_16hut"]
+default_font = ExtResource("5_1fltc")
+default_font_size = 72
+
 [node name="FlappyBird" type="Node2D"]
 script = ExtResource("1_mcwui")
 obstacle_spacing = 200.0
-obstacle_width = 60.0
-max_difficulty_score = 15
+obstacle_width = 70.0
+obstacle_height_max = 150.0
+obstacle_height_min = 70.0
+max_difficulty_score = 35
 
 [node name="Player" type="CharacterBody2D" parent="."]
 motion_mode = 1
@@ -28,25 +37,55 @@ shape = SubResource("CircleShape2D_yms0a")
 [node name="Camera2D" parent="Player" instance=ExtResource("3_n8d7w")]
 debug_mode = false
 
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = ExtResource("4_ernwv")
+
 [node name="FlappyBirdUI" type="CanvasLayer" parent="."]
 
-[node name="LabelContainer" type="VBoxContainer" parent="FlappyBirdUI"]
+[node name="ScoreContainer" type="HBoxContainer" parent="FlappyBirdUI"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -20.0
-offset_top = 30.0
+offset_top = 20.0
 offset_right = 20.0
-offset_bottom = 70.0
+offset_bottom = 60.0
 grow_horizontal = 2
+scale = Vector2(1.5, 1.5)
 
-[node name="Score" type="Label" parent="FlappyBirdUI/LabelContainer"]
-layout_mode = 2
-
-[node name="JumpCount" type="Label" parent="FlappyBirdUI/LabelContainer"]
+[node name="GameOverScreen" type="VBoxContainer" parent="FlappyBirdUI"]
 visible = false
+clip_contents = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.5
+offset_top = -73.0
+offset_right = 125.5
+offset_bottom = 73.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_16hut")
+
+[node name="GameOver" type="TextureRect" parent="FlappyBirdUI/GameOverScreen"]
 layout_mode = 2
+texture = ExtResource("5_r1aiw")
+
+[node name="HighScoreContainer" type="HBoxContainer" parent="FlappyBirdUI/GameOverScreen"]
+clip_contents = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+
+[node name="HighScoreText" type="Label" parent="FlappyBirdUI/GameOverScreen/HighScoreContainer"]
+layout_mode = 2
+theme = SubResource("Theme_16hut")
+text = "High Score "
+
+[node name="BackgroundSprites" type="Node2D" parent="."]
 
 [connection signal="dashed" from="Player" to="." method="_on_player_dashed"]
 [connection signal="dead" from="Player" to="." method="_on_player_dead"]
+[connection signal="dead" from="Player" to="Player" method="_on_dead"]
 [connection signal="jumped" from="Player" to="." method="_on_player_jumped"]

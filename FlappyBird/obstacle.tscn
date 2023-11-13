@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://n2e2ammj4f6y"]
 
 [ext_resource type="Script" path="res://Obstacle.gd" id="1_muxv0"]
-[ext_resource type="Texture2D" uid="uid://sql121vjw5w1" path="res://icon.svg" id="2_l8roi"]
+[ext_resource type="Texture2D" uid="uid://d0fjgt6o2x51s" path="res://FlappyBird/Sprites/pipe-green.png" id="2_r422o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0toea"]
 resource_local_to_scene = true
@@ -13,12 +13,14 @@ resource_local_to_scene = true
 script = ExtResource("1_muxv0")
 
 [node name="Top" type="StaticBody2D" parent="."]
+position = Vector2(223, 47)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Top"]
 shape = SubResource("RectangleShape2D_0toea")
 
 [node name="Sprite2D" type="Sprite2D" parent="Top"]
-texture = ExtResource("2_l8roi")
+texture = ExtResource("2_r422o")
+flip_v = true
 
 [node name="Bot" type="StaticBody2D" parent="."]
 
@@ -26,7 +28,7 @@ texture = ExtResource("2_l8roi")
 shape = SubResource("RectangleShape2D_1ypka")
 
 [node name="Sprite2D" type="Sprite2D" parent="Bot"]
-texture = ExtResource("2_l8roi")
+texture = ExtResource("2_r422o")
 
 [connection signal="mouse_entered" from="Top" to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Top" to="." method="_on_mouse_exited"]

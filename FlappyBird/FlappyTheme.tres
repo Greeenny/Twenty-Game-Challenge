@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://byjr60i0v16n3"]
+
+[ext_resource type="FontFile" uid="uid://q15cvdges5eg" path="res://FlappyBird/FlappyFont.ttf" id="1_iddxx"]
+
+[resource]
+default_font = ExtResource("1_iddxx")
+default_font_size = 72
