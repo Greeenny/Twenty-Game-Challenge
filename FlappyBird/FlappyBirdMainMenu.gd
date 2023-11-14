@@ -6,6 +6,12 @@ var background_list : Array = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	initialize_background()
+	var dir = DirAccess.open("user://FlappyMadness")
+	if dir:
+		pass
+	else:
+		DirAccess.make_dir_absolute("user://FlappyMadness")
+
 	pass # Replace with function body.
 
 

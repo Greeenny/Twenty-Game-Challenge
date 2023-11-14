@@ -5,20 +5,20 @@ var up_or_down = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	current_scene = "res://FlappyBird/first_difficulty.tscn"
+	BPM = 120
 	super._ready()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	BPM = 120 + score/25*60
+	if score > 25:
+		BPM = 180
 	super._process(delta)
-	beat_counter += delta
-	if beat_counter >= 1:
-		beat_counter = 0
-		beat()
 	
 func beat():
 	print(current_beat)
 	current_beat += 1
-	if current_beat == 2:
+	if current_beat == 4:
 		current_beat = 0
 		var stream = get_free_audio_stream()
 		stream.set_stream(glock_3_wav)
@@ -37,9 +37,11 @@ func obstacle_movement():
 	for obstacle in obstacle_list:
 		
 		var translation_distance = randf_range(100,250)
-		if score > 10:
+		if score >= 10 and score < 20:
+			BPM = 180
 			translation_distance = translation_distance + 100
-		elif score > 20:
+		elif score >= 20:
+			BPM = 240
 			translation_distance = translation_distance + 300
 				
 		if up_or_down <= 1:

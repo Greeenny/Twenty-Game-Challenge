@@ -4,7 +4,7 @@ var current_scene : String = "res://FlappyBird/flappy_bird_main_menu.tscn"
 #Music
 @export var BPM : float = 120
 @onready var audio_stream_list : Array = [$AudioStreamPlayer]
-var BPS = float(float(60)/float(BPM))
+
 var beat_counter = 0 
 var current_beat = 0
 var glock_1_wav = load("res://FlappyBird/706835__groupofseven__glok1.wav")
@@ -31,11 +31,19 @@ func _ready():
 	initialize_level()
 	initialize_background()
 	add_score(1)
+	
 	pass # Replace with function body.
-
+func beat():
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	var SPB = float(60)/BPM
+	beat_counter += delta
+	if beat_counter >= SPB:
+		beat_counter = 0
+		beat()
+		
 	if Input.is_action_just_pressed("reset"):
 		get_tree().change_scene_to_file(current_scene)
 	if Input.is_action_just_pressed("escape_key"):
@@ -135,14 +143,17 @@ func add_score(input_int):
 
 func _on_player_dead():
 	print("Player has died!")
-	var score_file = FileAccess.open("res://FlappyBird/score.json",FileAccess.READ)
-	var score_json = JSON.parse_string(score_file.get_as_text())
-	score_file.close()
-
-	var high_score = score_json["high_score"]
-	print(high_score)
+	var score_file = FileAccess.open("user://FlappyMadness/score.json",FileAccess.READ)
+	var high_score : int
+	var score_json : Dictionary = {}
+	if score_file:
+		score_json = JSON.parse_string(score_file.get_as_text())
+		score_file.close()
+		high_score = score_json["high_score"]
+	else:
+		high_score = 0
 	if high_score < score:
-		score_file = FileAccess.open("res://FlappyBird/score.json",FileAccess.WRITE)
+		score_file = FileAccess.open("user://FlappyMadness/score.json",FileAccess.WRITE)
 		score_json['high_score'] = score
 		high_score = score
 		score_file.store_string(JSON.stringify(score_json)) 
