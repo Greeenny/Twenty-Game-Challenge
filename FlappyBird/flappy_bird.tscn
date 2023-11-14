@@ -21,6 +21,7 @@ obstacle_width = 70.0
 obstacle_height_max = 150.0
 obstacle_height_min = 70.0
 max_difficulty_score = 35
+BPM = null
 
 [node name="Player" type="CharacterBody2D" parent="."]
 motion_mode = 1

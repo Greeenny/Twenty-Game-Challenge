@@ -169,6 +169,7 @@ func _physics_process(delta):
 
 	# death checks lol
 	if get_last_slide_collision() != null and velocity.x < dash_speed-5 and get_last_slide_collision().get_travel().x > 0:
+		print('dead')
 		emit_signal("dead")
 	
 	if get_global_position().y > get_viewport_rect().size.y:

@@ -1,0 +1,87 @@
+[gd_scene load_steps=9 format=3 uid="uid://cipcwncvgbvx2"]
+
+[ext_resource type="Script" path="res://FlappyBird/FirstDifficulty.gd" id="1_wy4wi"]
+[ext_resource type="Script" path="res://FlappyBird/Player.gd" id="2_r3nx4"]
+[ext_resource type="PackedScene" uid="uid://daifjd3jc71mm" path="res://Main/camera_2d.tscn" id="3_qt4uh"]
+[ext_resource type="Texture2D" uid="uid://bataohkfitlmh" path="res://FlappyBird/Sprites/bluebird-midflap.png" id="4_rnl8q"]
+[ext_resource type="FontFile" uid="uid://q15cvdges5eg" path="res://FlappyBird/FlappyFont.ttf" id="5_m46sg"]
+[ext_resource type="Texture2D" uid="uid://cp81kq0npjfj5" path="res://FlappyBird/Sprites/gameover.png" id="6_alwos"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_p41m0"]
+resource_local_to_scene = true
+
+[sub_resource type="Theme" id="Theme_5scax"]
+default_font = ExtResource("5_m46sg")
+default_font_size = 72
+
+[node name="FirstDifficulty" type="Node2D"]
+script = ExtResource("1_wy4wi")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+motion_mode = 1
+script = ExtResource("2_r3nx4")
+color = Color(0.521569, 0.160784, 0.317647, 1)
+gravity = 60.0
+dash_decelleration_ratio = 0.5
+camera_offset_ratio = 0.5
+camera_follow_ratio = 0.5
+
+[node name="Collision" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CircleShape2D_p41m0")
+
+[node name="Camera2D" parent="Player" instance=ExtResource("3_qt4uh")]
+debug_mode = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = ExtResource("4_rnl8q")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="ScoreContainer" type="HBoxContainer" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 20.0
+offset_right = 20.0
+offset_bottom = 60.0
+grow_horizontal = 2
+scale = Vector2(1.5, 1.5)
+
+[node name="GameOverScreen" type="VBoxContainer" parent="UI"]
+visible = false
+clip_contents = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.5
+offset_top = -73.0
+offset_right = 125.5
+offset_bottom = 73.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_5scax")
+
+[node name="GameOver" type="TextureRect" parent="UI/GameOverScreen"]
+layout_mode = 2
+texture = ExtResource("6_alwos")
+
+[node name="HighScoreContainer" type="HBoxContainer" parent="UI/GameOverScreen"]
+clip_contents = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+
+[node name="HighScoreText" type="Label" parent="UI/GameOverScreen/HighScoreContainer"]
+layout_mode = 2
+theme = SubResource("Theme_5scax")
+text = "High Score "
+
+[node name="BackgroundSprites" type="Node2D" parent="."]
+
+[connection signal="dashed" from="Player" to="." method="_on_player_dashed"]
+[connection signal="dead" from="Player" to="." method="_on_player_dead"]
+[connection signal="dead" from="Player" to="Player" method="_on_dead"]

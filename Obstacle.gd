@@ -80,18 +80,19 @@ func translate_obstacle(distance):
 	if top_bottom_edge.y + distance <= -viewport_size.y/2 or bottom_top_edge.y + distance >= viewport_size.y/2:
 		while top_bottom_edge.y + distance <= -viewport_size.y/2 or bottom_top_edge.y + distance >= viewport_size.y/2:
 			if distance > 0:
-				distance -= 15
+				distance -= 2
 				edge = EDGE.BOTTOM
 			if distance < 0:
-				distance += 15
+				distance += 2
 				edge = EDGE.TOP
-			if count == 3:
+			if count == 50:
 				distance = 0
 			count += 1
 	else:
 		edge = EDGE.NONE
 	state = STATES.TRANSLATING
 	translate_distance = distance
+	print(translate_distance)
 	pass
 func chomp_obstacle():
 	chomping_distance = opening_height/2
