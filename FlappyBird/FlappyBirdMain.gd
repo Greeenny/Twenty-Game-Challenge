@@ -149,7 +149,7 @@ func add_score(input_int):
 func _on_player_dead():
 	running = false
 	print("Player has died!")
-	var score_file = FileAccess.open("user://FlappyMadness/score.json",FileAccess.READ)
+	var score_file = FileAccess.open("user://FlappyMadness/high_score.json",FileAccess.READ)
 	var high_score : int
 	var score_json : Dictionary = {}
 	if score_file:
