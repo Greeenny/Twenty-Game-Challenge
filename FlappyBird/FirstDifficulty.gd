@@ -10,7 +10,8 @@ func _ready():
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	BPM = 120 + score/25*60
+	print(BPM)
+	BPM = 120 + float(float(score)/25*60)
 	if score > 25:
 		BPM = 180
 	super._process(delta)

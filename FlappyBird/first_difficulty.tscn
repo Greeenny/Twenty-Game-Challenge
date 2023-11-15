@@ -1,18 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://cipcwncvgbvx2"]
+[gd_scene load_steps=7 format=3 uid="uid://cipcwncvgbvx2"]
 
 [ext_resource type="Script" path="res://FlappyBird/FirstDifficulty.gd" id="1_wy4wi"]
 [ext_resource type="Script" path="res://FlappyBird/Player.gd" id="2_r3nx4"]
 [ext_resource type="PackedScene" uid="uid://daifjd3jc71mm" path="res://Main/camera_2d.tscn" id="3_qt4uh"]
 [ext_resource type="Texture2D" uid="uid://bataohkfitlmh" path="res://FlappyBird/Sprites/bluebird-midflap.png" id="4_rnl8q"]
-[ext_resource type="FontFile" uid="uid://q15cvdges5eg" path="res://FlappyBird/FlappyFont.ttf" id="5_m46sg"]
-[ext_resource type="Texture2D" uid="uid://cp81kq0npjfj5" path="res://FlappyBird/Sprites/gameover.png" id="6_alwos"]
+[ext_resource type="PackedScene" uid="uid://cwl5socmjnwll" path="res://FlappyBird/game_over_screen.tscn" id="5_etaeq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p41m0"]
 resource_local_to_scene = true
-
-[sub_resource type="Theme" id="Theme_5scax"]
-default_font = ExtResource("5_m46sg")
-default_font_size = 72
 
 [node name="FirstDifficulty" type="Node2D"]
 script = ExtResource("1_wy4wi")
@@ -50,35 +45,8 @@ offset_bottom = 60.0
 grow_horizontal = 2
 scale = Vector2(1.5, 1.5)
 
-[node name="GameOverScreen" type="VBoxContainer" parent="UI"]
+[node name="GameOverScreen" parent="UI" instance=ExtResource("5_etaeq")]
 visible = false
-clip_contents = true
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -125.5
-offset_top = -73.0
-offset_right = 125.5
-offset_bottom = 73.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = SubResource("Theme_5scax")
-
-[node name="GameOver" type="TextureRect" parent="UI/GameOverScreen"]
-layout_mode = 2
-texture = ExtResource("6_alwos")
-
-[node name="HighScoreContainer" type="HBoxContainer" parent="UI/GameOverScreen"]
-clip_contents = true
-custom_minimum_size = Vector2(0, 72)
-layout_mode = 2
-
-[node name="HighScoreText" type="Label" parent="UI/GameOverScreen/HighScoreContainer"]
-layout_mode = 2
-theme = SubResource("Theme_5scax")
-text = "High Score "
 
 [node name="BackgroundSprites" type="Node2D" parent="."]
 

@@ -1,18 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://n504tfssj8q4"]
+[gd_scene load_steps=7 format=3 uid="uid://n504tfssj8q4"]
 
 [ext_resource type="Script" path="res://FlappyBird/FlappyBirdMain.gd" id="1_hnbqf"]
 [ext_resource type="Script" path="res://FlappyBird/Player.gd" id="2_1mbdc"]
 [ext_resource type="PackedScene" uid="uid://daifjd3jc71mm" path="res://Main/camera_2d.tscn" id="3_ncf6s"]
 [ext_resource type="Texture2D" uid="uid://bataohkfitlmh" path="res://FlappyBird/Sprites/bluebird-midflap.png" id="4_c885i"]
-[ext_resource type="FontFile" uid="uid://q15cvdges5eg" path="res://FlappyBird/FlappyFont.ttf" id="5_uc3qh"]
-[ext_resource type="Texture2D" uid="uid://cp81kq0npjfj5" path="res://FlappyBird/Sprites/gameover.png" id="6_5qbo3"]
+[ext_resource type="PackedScene" uid="uid://cwl5socmjnwll" path="res://FlappyBird/game_over_screen.tscn" id="5_yvf07"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6am6i"]
 resource_local_to_scene = true
-
-[sub_resource type="Theme" id="Theme_fxdn6"]
-default_font = ExtResource("5_uc3qh")
-default_font_size = 72
 
 [node name="FlappyBirdMain" type="Node2D"]
 script = ExtResource("1_hnbqf")
@@ -50,34 +45,6 @@ offset_bottom = 60.0
 grow_horizontal = 2
 scale = Vector2(1.5, 1.5)
 
-[node name="GameOverScreen" type="VBoxContainer" parent="UI"]
-visible = false
-clip_contents = true
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -125.5
-offset_top = -73.0
-offset_right = 125.5
-offset_bottom = 73.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = SubResource("Theme_fxdn6")
-
-[node name="GameOver" type="TextureRect" parent="UI/GameOverScreen"]
-layout_mode = 2
-texture = ExtResource("6_5qbo3")
-
-[node name="HighScoreContainer" type="HBoxContainer" parent="UI/GameOverScreen"]
-clip_contents = true
-custom_minimum_size = Vector2(0, 72)
-layout_mode = 2
-
-[node name="HighScoreText" type="Label" parent="UI/GameOverScreen/HighScoreContainer"]
-layout_mode = 2
-theme = SubResource("Theme_fxdn6")
-text = "High Score "
+[node name="GameOverScreen" parent="UI" instance=ExtResource("5_yvf07")]
 
 [connection signal="dead" from="Player" to="Player" method="_on_dead"]

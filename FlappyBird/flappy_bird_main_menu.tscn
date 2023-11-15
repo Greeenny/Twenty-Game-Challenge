@@ -45,7 +45,7 @@ popup/item_3/id = 3
 [node name="TutorialButton" type="MenuButton" parent="UI/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("2_5exv0")
-text = "Tutorial"
+text = "How to Play"
 flat = false
 item_count = 4
 popup/item_0/text = "Space - Jump"
@@ -54,7 +54,7 @@ popup/item_1/text = "D - Dash"
 popup/item_1/id = 1
 popup/item_2/text = "R - Reset"
 popup/item_2/id = 2
-popup/item_3/text = "Esc - Quit to Main Menu"
+popup/item_3/text = "Esc - Menu"
 popup/item_3/id = 3
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="UI"]
@@ -73,6 +73,13 @@ theme = ExtResource("2_5exv0")
 text = "O w O
 Flappy Madness"
 horizontal_alignment = 1
+
+[node name="PauseScreen" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="BackgroundSprites" type="Node2D" parent="."]
 

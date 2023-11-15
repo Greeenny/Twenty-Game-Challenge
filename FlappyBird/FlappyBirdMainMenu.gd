@@ -1,7 +1,7 @@
 extends Node2D
 
 var background_list : Array = []
-
+var difficulty_selection = {0:"res://FlappyBird/first_difficulty.tscn"}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -37,6 +37,7 @@ func initialize_background():
 
 
 func _on_play_game_pressed():
+	get_tree().change_scene_to_file(difficulty_selection[0])
 	var difficulty_button = $UI/VBoxContainer/Difficulty
 	if difficulty_button.visible == true:
 		difficulty_button.hide()
@@ -45,7 +46,7 @@ func _on_play_game_pressed():
 	pass # Replace with function body.
 
 
-var difficulty_selection = {0:"res://FlappyBird/first_difficulty.tscn"}
+
 func _on_difficulty_item_selected(index):
 	if index in difficulty_selection:
 		get_tree().change_scene_to_file(difficulty_selection[index])

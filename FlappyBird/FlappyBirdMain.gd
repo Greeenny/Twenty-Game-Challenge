@@ -1,6 +1,8 @@
 extends Node2D
 
 var current_scene : String = "res://FlappyBird/flappy_bird_main_menu.tscn"
+
+var running : bool = true
 #Music
 @export var BPM : float = 120
 @onready var audio_stream_list : Array = [$AudioStreamPlayer]
@@ -26,6 +28,7 @@ var score : int = -1
 var obstacle_count : int = 0
 
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	initialize_level()
@@ -40,10 +43,12 @@ func beat():
 func _process(delta):
 	var SPB = float(60)/BPM
 	beat_counter += delta
-	if beat_counter >= SPB:
+	if beat_counter >= SPB and running:
 		beat_counter = 0
 		beat()
 		
+
+
 	if Input.is_action_just_pressed("reset"):
 		get_tree().change_scene_to_file(current_scene)
 	if Input.is_action_just_pressed("escape_key"):
@@ -142,6 +147,7 @@ func add_score(input_int):
 
 
 func _on_player_dead():
+	running = false
 	print("Player has died!")
 	var score_file = FileAccess.open("user://FlappyMadness/score.json",FileAccess.READ)
 	var high_score : int
